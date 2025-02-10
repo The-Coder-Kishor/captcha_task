@@ -25,6 +25,7 @@ Dataset - https://drive.google.com/file/d/1_rZMkI4wx2eydPWP1R1NOKijH0_R2DGE/view
 Dataset with bonus - https://drive.google.com/file/d/1hpmfsm86egdmzOZ_2SozBMst4C5YK1RA/view?usp=sharing
 
 # Model reversing
+You can see related stuff at /model_reversing
 
 In between i got busy with creating question for The Deccan CTF which the hacking club conducted on 8th-9th. I created a question that I believer has very much importance and helped me learn more about image classification models and so forth (only one person was able to cract the question in the CTF)
 
@@ -44,6 +45,7 @@ Then I wrote a function to start with a base image and use cross entropy loss ca
 In the CTF, participants were asked to find the same and submit the flag as 0x1337{TRYHACKME}
 
 # Classification Model
+You can see classification and related stuff at /classifier_model
 
 For the image classification model, i decided to go with a Resnet-50 model pretrained on ImageNet. I chose Resnet, because as part of my limited experience with vision based models Resnet had given me good results - I used Resnet for my megathon task, some project with model quanitzation that I did for SPCRC and Qualcomm over last winter etc. I took resnet-50 over resnet18 because i wanted the more layers and the accuracy. 
 
@@ -157,16 +159,50 @@ There are close to 480-54000 images per class.
 A test of the classification model can be seen in classifier_model.
 
 # Generation
+You can see code and everything at /generator_model
+
 
 I chose CRNN for this: CRNN (Convolutional Recurrent Neural Network) is a great choice for CAPTCHA text recognition because it combines CNNs for feature extraction and RNNs for sequence modeling, making it ideal for handling variable-length and distorted text in images.
 CNN - edges, shapes, textures
 RNN - relation between characters
 CTC Loss - Sequence Alignment
 
-CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 CHAR2IDX = {c: i + 1 for i, c in enumerate(CHARS)}  # Leave 0 for blank token
 IDX2CHAR = {i: c for c, i in CHAR2IDX.items()}
 - character index
 
 Because of limitations in copmute power, I limited number of images from each dataset to 1 easy(the only generated) and 20 of everything else and 40 of the red. I tried playing with it. Results are not the best, some letters get wrong most of the time.
+If i had more compute power, I could try a better version
 
+If you see the resultsm, they are very bad but that is because I had to reduce the number of epochs, batch size and general quality of dataset. Can be made better something Clip which i was not able to implement efficiently for the computing resource i had.
+
+nn.Sequential -> layer pipeline
+nn.Conv2D -> grayscale to feature maps with 3x3 kernel
+nn.RELU -> applies non-linearity (most important features)
+nn.MaxPool2d -> Downsamples
+nn.Conv2d -> deeper features from most important fratures
+nn.RELU -> again most important features
+nn.MaxPool2d -> Downsamples
+repeated couple more times
+
+nn.LSTM -> flattening images, RNN model to character sequences (CNN has reduced image width by 16)
+nn.Linear -> convert to probabilities for each character
+
+Bidirectional LSTM -> for forward and backward context (red and green)
+
+CTC Loss -> handles unaligned losses used as loss function for the training
+Adam optimizer
+
+
+logits = model(image)
+log_probs = logits.log_softmax(2)
+ctc_loss = nn.CTCLoss(blank=0, reduction='mean', zero_infinity=True) - averages loss over the batch
+loss = ctc_loss(log_probs, targets, input_lengths, target_lengths) - model prediction (Txbatchxnum_classes)
+
+Better than crossentropy loss and labels are not fixed. CTC is better than Crossentropy for ocr like tasks similar to captcha
+
+I understand the results are bad but with more time, gpu power and some more knowledge of ml concepts I can make something better
+
+# Paper Reading
+paper reading report can be seen in /paper_report
