@@ -154,6 +154,8 @@ Validation statistics are computed similarly to training statistics.
 
 There are close to 480-54000 images per class.
 
+A test of the classification model can be seen in classifier_model.
+
 # Generation
 
 I chose CRNN for this: CRNN (Convolutional Recurrent Neural Network) is a great choice for CAPTCHA text recognition because it combines CNNs for feature extraction and RNNs for sequence modeling, making it ideal for handling variable-length and distorted text in images.
@@ -166,5 +168,5 @@ CHAR2IDX = {c: i + 1 for i, c in enumerate(CHARS)}  # Leave 0 for blank token
 IDX2CHAR = {i: c for c, i in CHAR2IDX.items()}
 - character index
 
-Because of limitations in copmute power, I limiter number of images from each dataset
+Because of limitations in copmute power, I limited number of images from each dataset to 1 easy(the only generated) and 20 of everything else and 40 of the red. I tried playing with it. Results are not the best, some letters get wrong most of the time.
 
