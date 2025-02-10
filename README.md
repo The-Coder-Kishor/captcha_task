@@ -22,7 +22,7 @@ I have created codes for
 I then organized the images into a folder format - dataset/`<word>`/`<captcha_images with the word>`. Code can be seen in organize_for_classification.ipynb
 
 Dataset - https://drive.google.com/file/d/1_rZMkI4wx2eydPWP1R1NOKijH0_R2DGE/view?usp=drive_link
-Dataset with bonus - https://drive.google.com/file/d/1hpmfsm86egdmzOZ_2SozBMst4C5YK1RA/view?usp=sharing
+Dataset with bonus - https://drive.google.com/file/d/1y6-umVxJWTPo4AQHC86Of1KrNnTwadGp/view?usp=sharing
 
 # Model reversing
 You can see related stuff at /model_reversing
